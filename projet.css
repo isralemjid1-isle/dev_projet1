@@ -1,0 +1,119 @@
+body {
+  background: red;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;   
+  justify-content: center;  
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+
+.game-container {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 150px;
+  transition: all 0.8s ease;
+}
+
+.tile {
+  background: white;
+  color: rgb(35, 141, 122);
+  font-size: 60px;
+  font-weight: bold;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+  box-shadow: 7px 7px black, 0 1px 1px rgba(0,0,0,0.4);
+  text-transform: uppercase;
+}
+
+
+button {
+  border: none;
+  border-radius: 2px;
+  font-size: 40px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  background-color:white;
+  color: grey;
+  padding: 15px 50px;
+  cursor: pointer;
+  box-shadow: 0 4px rgb(50, 50, 50), 0 6px 10px rgba(0,0,0,0.4);
+}
+
+button:hover {
+  background-color: rgb(42, 1, 52);
+}
+li{
+  display: none;
+}
+
+
+.celldeco{
+  display: flex;
+  border:1px solid rgb(254, 254, 254);
+  width: 500px;
+  height:100px;
+  border-radius: 5%;
+  background-color: green;
+  
+
+}
+.deco{
+   display: flex;
+  border:1px solid rgb(254, 254, 254);
+  width: 500px;
+  height:100px;
+  border-radius: 5%;
+  background-color: green;
+}
+.nouveau {
+    background-color: pink; 
+    padding: 20px;
+}
+.apresinsertion{
+  display: none;
+}
+
+.deco{
+  font-size: 75px;
+  position: center;
+  text-align: center;
+  letter-spacing: 10px;
+  font-weight: bold;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: black;
+
+}
+
+.letter-box {
+    width: 60px;
+    height: 60px;
+    border: 2px solid grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: pink; /* Couleur par défaut */
+    transition: all 0.3s ease;
+}
+
+.in_box_lettre{
+  width: 60px;     /* Largeur de la boîte */
+    height: 60px;    /* Hauteur de la boîte (pour la rendre carrée) */
+    border: 2px solid violet;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centre la lettre au milieu de la boîte */
+    font-size: 30px;
+    background-color: orange;
+}
+
+
+
