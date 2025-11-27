@@ -1,119 +1,467 @@
-body {
-  background: red;
-  font-family: 'Courier New', monospace;
-  display: flex;
-  flex-direction: column;   
-  justify-content: center;  
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+/* Styles pour la configuration du joueur */
+.player-setup {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    margin-bottom: 30px;
+    display: block;
+}
+
+h2{
+    color:rgb(75, 75, 250);
+}
+
+#start-game-btn{
+    border-radius: 7px;
+    font-size: larger;
+    color: rgb(193, 193, 255);
+    background-color: rgb(9, 9, 55);
+
 }
 
 
+#player-name-input {
+    width: 250px;
+    padding: 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+#start-game {
+    border: none;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    cursor: pointer;
+    box-shadow: 0 4px rgb(50, 50, 50), 0 6px 10px rgba(0,0,0,0.4);
+}
+
+#start-game:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+/* Styles pour l'affichage du joueur et score */
+.player-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border: 3px solid #4CAF50;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+}
+
+.player-display.visible {
+    display: flex;
+}
+
+#player-name {
+    color: #ff0055;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.score-display {
+    font-size: 18px;
+}
+
+#score-value {
+    color: #ff0055;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Cacher la configuration du joueur pendant le jeu */
+.player-setup.hidden {
+    display: none;
+}
+
+/* Cacher le bouton Let's play initialement */
+#boutton {
+    display: none;
+}
+
+/* Afficher le bouton Let's play après configuration */
+#boutton.visible {
+    display: block;
+}
+
+
+/* Styles pour l'affichage du score */
+.score-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border: 3px solid #4CAF50;
+    display: none; /* Caché au début */
+}
+
+.score-display.visible {
+    display: block;
+}
+
+#score-value {
+    color: #ff0055;
+    font-size: 28px;
+}
+
+
+/* Le reste de votre CSS existant reste inchangé */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #000000;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.display_others { display: none; }
+
+.symbole {
+    position: absolute;
+    font-size: 100px;
+    font-weight: bold;
+    animation: floatSymbole 10s linear infinite;
+    mix-blend-mode: normal;
+}
+
+.symbol {
+    position: absolute;
+    font-size: 150px;
+    font-weight: bold;
+    animation: floatSymbol 10s linear infinite;
+    mix-blend-mode: screen;
+}
+
+@keyframes floatSymbole {
+    0% { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translateY(50vh); }
+    100% { transform: translateY(-75vh); opacity: 0; }
+}
+
+@keyframes floatSymbol {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translateY(50vh) rotate(180deg); }
+    100% { transform: translateY(-50vh) rotate(360deg); opacity: 0; }
+}
+
+/* Container principal */
+.main-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+/* Section des indices (sidebar) */
+.indices-sidebar {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    width: 200px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.indice-btn {
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 10px;
+    cursor: pointer;
+    box-shadow: 0 4px rgb(50, 50, 50), 0 6px 10px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.indice-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.indice-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Section centrale du jeu */
+.game-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 600px;
+}
+
 .game-container {
-  display: flex;
-  gap: 25px;
-  margin-bottom: 150px;
-  transition: all 0.8s ease;
+    display: flex;
+    gap: 25px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    transition: all 0.8s ease;
 }
 
 .tile {
-  background: white;
-  color: rgb(35, 141, 122);
-  font-size: 60px;
-  font-weight: bold;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content:center;
-  align-items:center;
-  box-shadow: 7px 7px black, 0 1px 1px rgba(0,0,0,0.4);
-  text-transform: uppercase;
-}
-
-
-button {
-  border: none;
-  border-radius: 2px;
-  font-size: 40px;
-  font-weight: bold;
-  font-family: 'Courier New', monospace;
-  background-color:white;
-  color: grey;
-  padding: 15px 50px;
-  cursor: pointer;
-  box-shadow: 0 4px rgb(50, 50, 50), 0 6px 10px rgba(0,0,0,0.4);
-}
-
-button:hover {
-  background-color: rgb(42, 1, 52);
-}
-li{
-  display: none;
-}
-
-
-.celldeco{
-  display: flex;
-  border:1px solid rgb(254, 254, 254);
-  width: 500px;
-  height:100px;
-  border-radius: 5%;
-  background-color: green;
-  
-
-}
-.deco{
-   display: flex;
-  border:1px solid rgb(254, 254, 254);
-  width: 500px;
-  height:100px;
-  border-radius: 5%;
-  background-color: green;
-}
-.nouveau {
-    background-color: pink; 
-    padding: 20px;
-}
-.apresinsertion{
-  display: none;
-}
-
-.deco{
-  font-size: 75px;
-  position: center;
-  text-align: center;
-  letter-spacing: 10px;
-  font-weight: bold;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  color: black;
-
-}
-
-.letter-box {
-    width: 60px;
-    height: 60px;
-    border: 2px solid grey;
+    background: white;
+    color: black;
+    font-size: 60px;
+    font-weight: bold;
+    border-radius: 20px;
+    width: 80px;
+    height: 90px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 30px;
-    font-weight: bold;
+    box-shadow: 7px 7px rgb(137, 218, 255), 0 1px 1px rgba(0,0,0,0.4);
     text-transform: uppercase;
-    background-color: pink; /* Couleur par défaut */
-    transition: all 0.3s ease;
 }
 
-.in_box_lettre{
-  width: 60px;     /* Largeur de la boîte */
-    height: 60px;    /* Hauteur de la boîte (pour la rendre carrée) */
-    border: 2px solid violet;
+.space { width: 20px; }
+
+/* Bouton principal */
+#boutton {
+    border: none;
+    border-radius: 20px;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    background-color: white;
+    color: black;
+    padding: 20px 50px;
+    cursor: pointer;
+    box-shadow: 0 4px rgb(50, 50, 50), 0 6px 10px rgba(0,0,0,0.4);
+    margin-bottom: 50px;
+}
+
+#boutton:hover { 
+    background-color: rgb(27, 145, 184); 
+    color: white; 
+}
+
+/* Styles pour la grille */
+#grille {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.cell { 
+    display: none; 
+    margin-bottom: 10px; 
+}
+
+.celldeco {
     display: flex;
     justify-content: center;
-    align-items: center; /* Centre la lettre au milieu de la boîte */
-    font-size: 30px;
-    background-color: orange;
+    border-radius: 10px;
+    backdrop-filter: blur(30px);
+    width: 100%;
+    height: 65px;
+    border: 2px solid rgba(0,0,0,0);
+    margin-top: 10px;
+    gap: 5px;
 }
 
+.deco {
+    width: 60px;
+    height: 60px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    background-color: black;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Lucida Sans', sans-serif;
+    text-transform: uppercase;
+}
 
+.deco:focus {
+    outline: 3px solid rgb(36, 36, 36);
+    background-color: rgb(102, 102, 102);
+}
 
+.letter {
+    font-size: 30px;
+    font-family: 'Lucida Sans', sans-serif;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid rgb(12, 62, 71);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+}
+
+.lettre-correcte { 
+    text-shadow: 2px 2px 5px rgba(12, 255, 29, 0.5); 
+    background-color: green; 
+    color: white; 
+}
+
+.lettre-mal-placee { 
+    text-shadow: 2px 2px 5px rgba(234, 255, 0, 0.5); 
+    background-color: yellow; 
+    color: black; 
+}
+
+.lettre-incorrecte { 
+    text-shadow: 2px 2px 5px rgba(255, 4, 4, 0.5); 
+    background-color: red; 
+    color: white; 
+}
+
+/* Messages */
+.message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    z-index: 1000;
+    text-align: center;
+    min-width: 300px;
+}
+
+.message button {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.message button:hover {
+    background-color: #45a049;
+}
+
+.message-indice {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1000;
+    border: 2px solid #4CAF50;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .score-display {
+        top: 10px;
+        right: 10px;
+        font-size: 18px;
+        padding: 10px 15px;
+    }
+    
+    #score-value {
+        font-size: 20px;
+    }
+    
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .indices-sidebar {
+        width: 90%;
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .indice-btn {
+        font-size: 14px;
+        padding: 10px 5px;
+        flex: 1;
+    }
+    
+    .game-container {
+        gap: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .tile {
+        width: 60px;
+        height: 70px;
+        font-size: 40px;
+    }
+    
+    #boutton {
+        font-size: 30px;
+        padding: 15px 30px;
+    }
+    
+    .deco, .letter {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+}
