@@ -382,4 +382,4 @@ function initialiserJeu() {
         // Active la première ligne (index 0).
         activerLigne(0);
     }, 100);
-};
+}

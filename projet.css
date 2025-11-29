@@ -28,7 +28,43 @@ html, body {
     margin-top: 50px;
 }
 
+/* Section des indices (sidebar) */
+.indices-sidebar {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    width: 200px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
 
+.indice-btn {
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 10px;
+    cursor: pointer;
+    box-shadow: 0 4px rgb(50, 50, 50), 0 6px 10px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.indice-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.indice-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
 
 /* Section centrale du jeu */
 .game-center {
