@@ -7,42 +7,7 @@
     <link rel="stylesheet" href="projet.css">
 </head>
 <body>
-    <!-- Symboles flottants -->
-    <div class="symbol" style="left:10%; color:#ff0055;">?</div>
-    <div class="symbol m" style="left:7%; color:#ff0055; animation-delay: 0s;">?</div>
-    <div class="symbol m" style="left:13%; color:#00ff99; animation-delay: 2s;">!</div>
-    <div class="symbol m" style="left:60%; color:#ffcc00; animation-delay: 4s;">?</div>
-    <div class="symbole m" style="left:20%; color:#ff00ff; animation-delay: 3s;">😑</div>
-    <div class="symbol m" style="left:45%; color:#00ccff; animation-delay: 1.5s;">!</div>
-    <div class="symbole m" style="left:55%; color:#ff00ff; animation-delay: 3s;">👌</div>
-    <div class="symbol m" style="left:28%; color:#ffff00; animation-delay: 5s;">!</div>
-    <div class="symbol m" style="left:69%; color:#00ffcc; animation-delay: 6s;">?</div>
-    <div class="symbole m" style="left:2%; color:#ff00ff; animation-delay: 3s;">😁</div>
-    <div class="symbol m" style="left:60%; color:#ff00ff; animation-delay: 3s;">?</div>
-    <div class="symbol m" style="left:79%; color:#ffff00; animation-delay: 5s;">!</div>
-    <div class="symbole m" style="left:63%; color:#ff00ff; animation-delay: 3s;">💕</div>
-    <div class="symbol m" style="left:71%; color:#00ffcc; animation-delay: 6s;">?</div>
-    <div class="symbole m" style="left:85%; color:#ff00ff; animation-delay: 3s;">😊</div>
-    <div class="symbole m" style="left:35%; color:#ffff00; animation-delay: 5s;">😒</div>
-    <div class="symbole m" style="left:29%; color:#00ffcc; animation-delay: 6s;">😂</div>
-    <!-- affichage du score et nom du joueur -->
-    <div id="player-display" class="player-display">
-        <span id="player-name">Joueur</span>
-        <div id="score-display" class="score-display">
-            Score: <span id="score-value">0</span>
-        </div>
-    </div>
-    <!-- Container principal -->
-    <div class="main-container">
-        <!-- Section centrale du jeu -->
-        <main class="game-center">
-            <!-- Saisie du nom -->
-            <div id="player-setup" class="player-setup">
-                <h2>Entrez votre nom</h2>
-                <input type="text" id="player-name-input" placeholder="Votre nom" >
-                <button id="start-game-btn">Commencer</button> 
-            </div>
-
+    
             <!-- Jeu de mots -->
             <div class="game-container">
                 <span class="tile">M</span>
@@ -62,12 +27,7 @@
             </ul>
         </main>
 
-        <!-- Sidebar des indices -->
-        <aside class="indices-sidebar" id="indices-sidebar">
-            <button id="indice-taille" class="indice-btn">Taille du mot</button>
-            <button id="indice-premiere" class="indice-btn">Première lettre</button>
-            <button id="indice-derniere" class="indice-btn">Dernière lettre</button>
-        </aside>
+        
     </div>
 
     <script src="projet.js"></script>
