@@ -383,3 +383,399 @@ function initialiserJeu() {
         activerLigne(0);
     }, 100);
 }
+
+// Fonction pour activer les champs de saisie d'une ligne spécifique.
+function activerLigne(index) {
+    // Log dans la console pour le débogage.
+    console.log("Activation de la ligne:", index);
+    
+    // Parcourt toutes les lignes de la grille.
+    tousLesMots.forEach((cell, i) => {
+        // Récupère les inputs de la ligne.
+        const inputs = cell.querySelectorAll("input");
+        // Parcourt tous les inputs.
+        inputs.forEach(input => {
+            // Si la ligne N'EST PAS l'index actuel OU si la lettre a déjà été trouvée via indice.
+            if (i !== index || lettresCorrectes[input.dataset.position] !== null) {
+                // Désactive l'input.
+                input.disabled = true;
+                // Définit une couleur de fond désactivée.
+                input.style.backgroundColor = "#333";
+            } else {
+                // Active l'input pour la saisie.
+                input.disabled = false;
+                // Définit une couleur de fond pour la saisie (noir).
+                input.style.backgroundColor = "black";
+            }
+        });
+    });
+    
+    // Récupère la ligne actuellement activée.
+    const currentCell = tousLesMots[index];
+    // Récupère les inputs de cette ligne.
+    const inputs = currentCell.querySelectorAll("input");
+    // Trouve le premier champ d'entrée vide ET non désactivé.
+    const firstEmptyInput = Array.from(inputs).find(input => 
+        input.value === "" && !input.disabled
+    );
+    
+    // Si un champ vide et actif est trouvé.
+    if (firstEmptyInput) {
+        // Met le focus dessus.
+        firstEmptyInput.focus();
+    // Sinon, si la ligne a des champs.
+    } else if (inputs.length > 0) {
+        // Met le focus sur le premier champ (peut-être pour forcer l'événement de validation).
+        inputs[0].focus();
+    }
+    
+    // Ajoute des écouteurs d'événements pour la saisie et les touches de navigation.
+    inputs.forEach((input, i) => {
+        // Saute les champs désactivés (ceux pré-remplis par indice).
+        if (input.disabled) return;
+        
+        // Gère la saisie d'une lettre.
+        input.addEventListener("input", function(e) {
+            // Convertit la valeur en majuscule.
+            const value = e.target.value.toUpperCase();
+            // Met à jour la valeur du champ en majuscule.
+            e.target.value = value;
+            
+            // Si une valeur a été saisie ET que ce n'est pas le dernier champ.
+            if (value && i < inputs.length - 1) {
+                // Récupère le champ suivant.
+                const nextInput = inputs[i + 1];
+                // Si le champ suivant n'est pas désactivé.
+                if (!nextInput.disabled) {
+                    // Déplace le focus vers le champ suivant.
+                    nextInput.focus();
+                }
+            }
+            
+            // Vérifie si tous les champs de la ligne sont remplis.
+            const allFilled = Array.from(inputs).every(inp => inp.value !== "");
+            // Si tous sont remplis.
+            if (allFilled) {
+                // Valide le mot après un court délai.
+                setTimeout(() => verifierMot(index), 300);
+            }
+        });
+        
+        // Gère les touches du clavier (flèches, Entrée, Backspace).
+        input.addEventListener("keydown", function(e) {
+            // Gère la flèche Droite.
+            if (e.key === "ArrowRight" && i < inputs.length - 1) {
+                e.preventDefault(); // Empêche le comportement par défaut (déplacement du curseur dans le champ).
+                const nextInput = inputs[i + 1];
+                if (!nextInput.disabled) nextInput.focus();
+            }
+            // Gère la flèche Gauche.
+            if (e.key === "ArrowLeft" && i > 0) {
+                e.preventDefault();
+                const prevInput = inputs[i - 1];
+                if (!prevInput.disabled) prevInput.focus();
+            }
+            
+            // Gère la touche Entrée.
+            if (e.key === "Enter") {
+                e.preventDefault();
+                // Valide le mot.
+                verifierMot(index);
+            }
+            
+            // Gère la touche Backspace (si le champ est vide).
+            if (e.key === "Backspace" && !e.target.value && i > 0) {
+                e.preventDefault();
+                const prevInput = inputs[i - 1];
+                // Si le champ précédent n'est pas désactivé.
+                if (!prevInput.disabled) {
+                    // Efface la valeur du champ précédent.
+                    prevInput.value = "";
+                    // Déplace le focus vers le champ précédent.
+                    prevInput.focus();
+                }
+            }
+        });
+        
+        // Gère la sélection du texte lors du focus (pour faciliter l'effacement).
+        input.addEventListener("focus", function() {
+            this.select();
+        });
+    });
+}
+
+// Fonction principale pour vérifier le mot saisi par le joueur.
+function verifierMot(tentativeIndex) {
+    // Récupère la ligne actuelle.
+    const currentCell = tousLesMots[tentativeIndex];
+    // Récupère les inputs de la ligne.
+    const inputs = currentCell.querySelectorAll("input");
+    
+    // Variable pour stocker le mot reconstitué à partir des inputs.
+    let motSaisi = "";
+    // Indicateur pour savoir si tous les champs sont remplis.
+    let tousRemplis = true;
+    
+    // Boucle pour construire le mot saisi et vérifier le remplissage.
+    for (let i = 0; i < inputs.length; i++) {
+        // Si un champ est vide.
+        if (!inputs[i].value) {
+            tousRemplis = false;
+            break; // Sort de la boucle
+        }
+        // Ajoute la lettre (en minuscule) au mot saisi.
+        motSaisi += inputs[i].value.toLowerCase();
+    }
+    
+    // Si tous les champs ne sont pas remplis.
+    if (!tousRemplis) {
+        // Affiche un message d'erreur temporaire.
+        afficherMessageTemporaire("Veuillez remplir tous les champs avant de valider");
+        return; // Arrête la fonction.
+    }
+    
+    // Vérifie si la longueur du mot correspond à la longueur attendue.
+    if (motSaisi.length !== MOT_A_DEVINER.length) {
+        // Affiche un message d'erreur temporaire (ne devrait pas se produire si tousRemplis est true).
+        afficherMessageTemporaire(`Le mot doit contenir ${MOT_A_DEVINER.length} lettres`);
+        return;
+    }
+    
+    // Récupère le conteneur de décoration (pour le remplacer par les spans de couleur).
+    const celldeco = currentCell.querySelector(".celldeco");
+    // Vide le contenu du conteneur (enlève les inputs).
+    celldeco.innerHTML = '';
+    
+    // Indicateur pour savoir si le mot entier est correct.
+    let motCorrect = true;
+    
+    // Boucle pour comparer la saisie lettre par lettre avec le mot à deviner.
+    for (let i = 0; i < MOT_A_DEVINER.length; i++) {
+        // Crée un élément span pour afficher la lettre avec la bonne couleur.
+        const lettre = document.createElement('span');
+        lettre.className = 'letter';
+        // Définit le contenu du span (lettre en majuscule).
+        lettre.textContent = motSaisi[i].toUpperCase();
+        
+        // CAS 1 : Lettre correcte et bien placée (Vert).
+        if (motSaisi[i] === MOT_A_DEVINER[i]) {
+            lettre.classList.add('lettre-correcte');
+            // Met à jour le tableau des lettres correctes.
+            lettresCorrectes[i] = MOT_A_DEVINER[i];
+            // Ajoute la lettre aux lettres trouvées.
+            lettresTrouvees.add(MOT_A_DEVINER[i]);
+        // CAS 2 : Lettre correcte mais mal placée (Jaune/Orange).
+        } else if (MOT_A_DEVINER.includes(motSaisi[i])) {
+            lettre.classList.add('lettre-mal-placee');
+            motCorrect = false; // Le mot n'est pas entièrement correct.
+        // CAS 3 : Lettre incorrecte (Grise).
+        } else {
+            lettre.classList.add('lettre-incorrecte');
+            motCorrect = false; // Le mot n'est pas entièrement correct.
+        }
+        
+        // Ajoute la span au conteneur.
+        celldeco.appendChild(lettre);
+    }
+    
+    // Met à jour les lignes suivantes avec les lettres correctement trouvées.
+    mettreAJourLettresCorrectes();
+    
+    // Si le mot est entièrement correct.
+    if (motCorrect) {
+        // Calcule le score bonus (plus la tentative est basse, plus le score est haut).
+        score += (6 - tentativeActuelle) * 100;
+        // Met à jour l'affichage du score.
+        mettreAJourScore();
+        
+        // Affiche le message de victoire après un court délai.
+        setTimeout(() => {
+            afficherMessageFin("🎉 Félicitations ! Vous avez trouvé le mot !", true);
+        }, 500);
+        return; // Arrête la fonction.
+    }
+    
+    // Incrémente la tentative actuelle.
+    tentativeActuelle++;
+    
+    // Si il reste des tentatives.
+    if (tentativeActuelle < 6) {
+        // Active la ligne suivante après un court délai (pour l'animation de vérification).
+        setTimeout(() => {
+            activerLigne(tentativeActuelle);
+        }, 800);
+    // Si c'était la dernière tentative (6 tentatives au total, index 5).
+    } else {
+        // Affiche le message de défaite.
+        setTimeout(() => {
+            afficherMessageFin(`💔 Dommage ! Le mot était : ${MOT_A_DEVINER.toUpperCase()}`, false);
+        }, 800);
+    }
+}
+
+// Fonction pour mettre à jour l'affichage des lettres correctement trouvées dans toutes les lignes.
+function mettreAJourLettresCorrectes() {
+    // Parcourt toutes les lignes.
+    tousLesMots.forEach((cell, index) => {
+        // Récupère les inputs.
+        const inputs = cell.querySelectorAll("input");
+        // Parcourt chaque input.
+        inputs.forEach((input, i) => {
+            // Si une lettre a été trouvée correctement à cette position.
+            if (lettresCorrectes[i] !== null) {
+                // Met à jour la valeur de l'input.
+                input.value = lettresCorrectes[i].toUpperCase();
+                // Désactive l'input.
+                input.disabled = true;
+                // Applique le style vert.
+                input.style.backgroundColor = "green";
+                input.style.color = "white";
+            }
+        });
+    });
+}
+
+// Fonction pour mettre à jour l'affichage du score.
+function mettreAJourScore() {
+    // Récupère l'élément d'affichage du score.
+    const scoreValue = document.getElementById("score-value");
+    // Met à jour le texte avec la valeur actuelle du score.
+    scoreValue.textContent = score;
+}
+
+// Fonction pour afficher un message d'information ou d'erreur temporaire.
+function afficherMessageTemporaire(message) {
+    // Crée un nouvel élément div.
+    const messageTemp = document.createElement("div");
+    // Définit le contenu.
+    messageTemp.textContent = message;
+    // Applique un style CSS pour l'afficher en haut de l'écran (avec fond rouge pour l'erreur).
+    messageTemp.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 0, 0, 0.9);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        z-index: 1000;
+    `;
+    
+    // Ajoute le message au corps du document.
+    document.body.appendChild(messageTemp);
+    
+    // Définit un minuteur pour supprimer le message après 2 secondes (2000 ms).
+    setTimeout(() => {
+        messageTemp.remove();
+    }, 2000);
+}
+
+// Fonction pour afficher l'écran de fin de partie (victoire ou défaite).
+function afficherMessageFin(message, victoire) {
+    // Crée le conteneur du message de fin.
+    const container = document.createElement("div");
+    container.className = "message fin";
+    // Définit le contenu HTML du message (inclut le message, le score, et les boutons).
+    container.innerHTML = `
+        <p>${message}</p>
+        <p>Score actuel: ${score} points</p>
+        <div class="button-group">
+            <button class="btn-continuer">Continuer</button>
+            <button class="btn-changer-joueur">Changer de joueur</button>
+        </div>
+    `;
+    
+    // Ajoute le conteneur au corps du document.
+    document.body.appendChild(container);
+    
+    // Ajoute l'écouteur d'événement pour le bouton "Continuer" (Rejouer avec le même joueur).
+    container.querySelector(".btn-continuer").addEventListener("click", function() {
+        container.remove(); // Supprime le message de fin.
+        rejouerMemeJoueur(); // Démarre une nouvelle partie.
+    });
+    
+    // Ajoute l'écouteur d'événement pour le bouton "Changer de joueur".
+    container.querySelector(".btn-changer-joueur").addEventListener("click", function() {
+        // Réinitialiser le score si changement de joueur
+        score = 0;
+        playerNameChanged = false;
+        container.remove(); // Supprime le message de fin.
+        rejouerNouveauJoueur(); // Revient à l'écran de configuration du joueur.
+    });
+}
+
+// Fonction pour rejouer avec le même joueur (revient à l'écran de démarrage avec le bouton "Let's play").
+function rejouerMemeJoueur() {
+    // Supprime tous les messages de fin de partie précédents.
+    const messages = document.querySelectorAll(".message");
+    messages.forEach(msg => msg.remove());
+    
+    // Récupère les éléments DOM nécessaires.
+    const gameContainer = document.querySelector(".game-container");
+    const tiles = document.querySelectorAll(".tile");
+    const boutton = document.getElementById("boutton");
+    const indicesSidebar = document.getElementById("indices-sidebar");
+    
+    // Affiche l'écran de démarrage/accueil.
+    boutton.style.display = "block";
+    gameContainer.style.display = "flex";
+    tiles.forEach(tile => tile.style.display = "flex");
+    indicesSidebar.style.display = "none";
+    
+    // Vide la grille précédente.
+    const grille = document.getElementById("grille");
+    grille.innerHTML = '';
+    
+    // Vide le tableau de suivi des lignes.
+    tousLesMots = [];
+}
+
+// Fonction pour rejouer en changeant de joueur (revient à l'écran de saisie du nom).
+function rejouerNouveauJoueur() {
+    // Supprime tous les messages de fin de partie précédents.
+    const messages = document.querySelectorAll(".message");
+    messages.forEach(msg => msg.remove());
+    
+    // Récupère les éléments DOM nécessaires.
+    const gameContainer = document.querySelector(".game-container");
+    const tiles = document.querySelectorAll(".tile");
+    const boutton = document.getElementById("boutton");
+    const indicesSidebar = document.getElementById("indices-sidebar");
+    const playerDisplay = document.getElementById("player-display");
+    const playerSetup = document.getElementById("player-setup");
+    
+    // Réafficher la configuration du joueur
+    // Rend visible l'écran de saisie du nom.
+    playerSetup.classList.remove("hidden");
+    // Cache les autres éléments du jeu.
+    boutton.style.display = "none";
+    gameContainer.style.display = "flex";
+    tiles.forEach(tile => tile.style.display = "flex");
+    indicesSidebar.style.display = "none";
+    // Cache l'affichage du nom/score.
+    playerDisplay.classList.remove("visible");
+    
+    // Réinitialiser le champ nom
+    // Vide le champ de saisie du nom.
+    document.getElementById("player-name-input").value = "";
+    // Met le focus dessus.
+    document.getElementById("player-name-input").focus();
+    
+    // Vide la grille précédente.
+    const grille = document.getElementById("grille");
+    grille.innerHTML = '';
+    
+    // Vide le tableau de suivi des lignes.
+    tousLesMots = [];
+}
+
+// Gère l'événement de redimensionnement de la fenêtre.
+window.addEventListener('resize', function() {
+    // Si une partie est en cours (grille existe et tentatives non épuisées).
+    if (tousLesMots.length > 0 && tentativeActuelle < 6) {
+        // Ré-active la ligne actuelle pour s'assurer que le focus et les styles sont corrects après la redimension.
+        activerLigne(tentativeActuelle);
+    }
+});

@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="projet.css">
 </head>
 <body>
-    
+    <!-- affichage du score et nom du joueur -->
+    <div id="player-display" class="player-display">
+        <span id="player-name">Joueur</span>
+        <div id="score-display" class="score-display">
+            Score: <span id="score-value">0</span>
+        </div>
+    </div>
+    <!-- Container principal -->
+    <div class="main-container">
+        <!-- Section centrale du jeu -->
+        <main class="game-center">
+            <!-- Saisie du nom -->
+            <div id="player-setup" class="player-setup">
+                <h2>Entrez votre nom</h2>
+                <input type="text" id="player-name-input" placeholder="Votre nom" >
+                <button id="start-game-btn">Commencer</button> 
+            </div>
+
             <!-- Jeu de mots -->
             <div class="game-container">
                 <span class="tile">M</span>
